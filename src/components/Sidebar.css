@@ -1,0 +1,54 @@
+.sidebar-container {
+    position: relative;  /* artık navbar altından açılacak */
+    z-index: 999;
+}
+
+/* Toggle butonu navbar üstünde sabit kalabilir */
+.menu-toggle-btn {
+    font-size: 50px;    
+    color: #2c3e50;
+    cursor: pointer;
+    margin: 10px;
+}
+
+/* Sidebar navbar altından açılacak */
+.custom-sidebar {
+    background: #3b1648;
+    color: white;
+    width: 220px !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    top: 50px !important; /* navbar yüksekliği kadar aşağıda */
+    height: calc(100% - 100px) !important; /* navbar hariç yüksekliği */
+    transition: transform 0.2s ease; /* açılma animasyonu */
+    
+}
+
+/* Header */
+.sidebar-header {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Linkler */
+.sidebar-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+}
+
+.sidebar-links li {
+    padding: 12px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+}
+
+.sidebar-links li:hover {
+    background: rgba(255, 90, 7, 0.948);
+}
