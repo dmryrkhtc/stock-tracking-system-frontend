@@ -27,8 +27,14 @@ function SidebarMenu() {
                 <div className="sidebar-header">
                     <h2>Menu</h2>
                 </div>
+                {/* Kullanıcı alanı */}
+                <div className="sidebar-user">
+                    <p><strong>Kullanıcı:</strong> Hatice Demiryurek</p>
+
+                </div>
                 <ul className="sidebar-links">
                     <li><i className="pi pi-home"></i> Anasayfa</li>
+                    <li><i className="pi pi-building"></i> Şirketler</li>
                     <li><i className="pi pi-box"></i> Ürünler</li>
                     <li><i className="pi pi-database"></i> Stoklar</li>
                     <li><i className="pi pi-info-circle"></i> Stok Hareketleri</li>
