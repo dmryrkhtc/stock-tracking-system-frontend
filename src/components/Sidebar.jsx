@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import "./Sidebar.css";
+import { Link } from "react-router-dom";
 
 function SidebarMenu() {
     const [visible, setVisible] = useState(false);
@@ -29,15 +30,35 @@ function SidebarMenu() {
                 </div>
                 {/* Kullanıcı alanı */}
                 <div className="sidebar-user">
-                    <p><strong>Kullanıcı:</strong> Hatice Demiryurek</p>
+                    <p> <strong>Hatice Demiryürek</strong></p>
 
                 </div>
                 <ul className="sidebar-links">
-                    <li><i className="pi pi-home"></i> Anasayfa</li>
-                    <li><i className="pi pi-building"></i> Şirketler</li>
-                    <li><i className="pi pi-box"></i> Ürünler</li>
-                    <li><i className="pi pi-database"></i> Stoklar</li>
-                    <li><i className="pi pi-info-circle"></i> Stok Hareketleri</li>
+                    <li>
+                        <Link to="/">
+                            <i className="pi pi-home"></i> Anasayfa
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/companies">
+                            <i className="pi pi-building"></i> Şirketler
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/products">
+                            <i className="pi pi-box"></i> Ürünler
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/stocks">
+                            <i className="pi pi-database"></i> Stoklar
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/movements">
+                            <i className="pi pi-info-circle"></i> Stok Hareketleri
+                        </Link>
+                    </li>
                 </ul>
             </Sidebar>
         </div>

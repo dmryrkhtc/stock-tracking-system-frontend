@@ -4,21 +4,29 @@ import './App.css';
 import React from "react";
 import SidebarMenu from './components/Sidebar';
 import Navbar from './components/Navbar';
+import CompanyList from './pages/Companies/CompanyList';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import CompanyUpdate from './pages/Companies/CompanyUpdate';
+
 
 
 function App() {
   return (
-   <div>
+   <Router>
     <Navbar/>
-    
-    <SidebarMenu />
-      <div style={{ marginLeft: "240px", padding: "20px" }}>
-       
-        <h1>Dashboard content burada olacak... sonrasında eklemeler olacak</h1>
-      </div>
- 
+    <div  className='flex'>
+    <SidebarMenu /> 
    
+    <div className='flex-1 p-4'>
+      <Routes>
+       
+      <Route path="/companies" element={<CompanyList />} />
+      <Route path="/companies/update/:id" element={<CompanyUpdate />} />
+      
+   </Routes>
    </div>
+   </div>
+   </Router>
   );
 }
 

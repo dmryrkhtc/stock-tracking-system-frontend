@@ -14,13 +14,17 @@
 /* Sidebar navbar altından açılacak */
 .custom-sidebar {
     background: #3b1648;
-    color: white;
+    color: rgb(255, 255, 255) !important;
     width: 220px !important;
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     top: 50px !important; /* navbar yüksekliği kadar aşağıda */
     height: calc(100% - 100px) !important; /* navbar hariç yüksekliği */
     transition: transform 0.2s ease; /* açılma animasyonu */
     
+}
+.custom-sidebar a{
+    color:white;
+    text-decoration: none;
 }
 
 /* Header */
@@ -55,8 +59,8 @@
 /* Kullanıcı alanı */
 .sidebar-user {
     padding: 5px 20px;
-    background-color: rgba(255, 255, 255, 0.051);
+    background-color: rgba(255, 145, 1, 0.095);
     margin-bottom: 10px;
     border-radius: 5px;
-    font-size: 10.0px;
+    font-size: 15.0px;
 }
