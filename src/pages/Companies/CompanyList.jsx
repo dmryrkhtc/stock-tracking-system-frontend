@@ -97,7 +97,7 @@ export default function CompanyList() {
     return (
         <div className="p-4">
             <div className="flex justify-between items-center mb-3">
-                <h2>Şirketler</h2>
+                <h1>Şirketler</h1>
                 <Button
                     label="Yeni Şirket Ekle"
                     icon="pi pi-plus"

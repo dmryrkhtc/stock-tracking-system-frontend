@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
 import CompanyService from "../../services/CompanyService";
 
 export default function CompanyUpdate() {
@@ -44,6 +45,7 @@ export default function CompanyUpdate() {
     };
 
     return (
+
         <div className="p-4">
             <h2>Şirket Güncelle</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-md">
@@ -108,5 +110,6 @@ export default function CompanyUpdate() {
                 </div>
             </form>
         </div>
+
     );
 }

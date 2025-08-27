@@ -1,6 +1,6 @@
 import React from "react";
 import "./Navbar.css";
-import logo from "../pictures/logo.png"; // kendi logo dosya adını buraya yaz
+import logo from "../pictures/logo.png";
 
 function Navbar() {
     return (

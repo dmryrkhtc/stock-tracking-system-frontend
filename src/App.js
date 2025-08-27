@@ -7,6 +7,8 @@ import Navbar from './components/Navbar';
 import CompanyList from './pages/Companies/CompanyList';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CompanyUpdate from './pages/Companies/CompanyUpdate';
+import ProductList from './pages/Products/ProductList';
+import ProductUpdate from './pages/Products/ProductUpdate';
 
 
 
@@ -22,6 +24,8 @@ function App() {
        
       <Route path="/companies" element={<CompanyList />} />
       <Route path="/companies/update/:id" element={<CompanyUpdate />} />
+      <Route path="/products" element={<ProductList />} />
+      <Route path="/products/update/:id" element={<ProductUpdate />} />
       
    </Routes>
    </div>
