@@ -9,6 +9,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CompanyUpdate from './pages/Companies/CompanyUpdate';
 import ProductList from './pages/Products/ProductList';
 import ProductUpdate from './pages/Products/ProductUpdate';
+import StockList from './pages/Stocks/StockList';
+import StockUpdate from './pages/Stocks/StockUpdate';
 
 
 
@@ -26,7 +28,8 @@ function App() {
       <Route path="/companies/update/:id" element={<CompanyUpdate />} />
       <Route path="/products" element={<ProductList />} />
       <Route path="/products/update/:id" element={<ProductUpdate />} />
-      
+      <Route path="/stocks" element={<StockList />} />
+      <Route path="/stocks/update/:id" element={<StockUpdate />} />
    </Routes>
    </div>
    </div>
