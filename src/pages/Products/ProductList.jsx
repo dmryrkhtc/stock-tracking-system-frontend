@@ -18,6 +18,11 @@ export default function ProductList() {
     useEffect(() => {
         loadProducts();
     }, []);
+    const UNIT_MAP = {
+        Piece: "Adet",
+        Kg: "Kilogram",
+        Liter: "Litre",
+    };
 
     const loadProducts = async () => {
         setLoading(true);
@@ -81,10 +86,11 @@ export default function ProductList() {
                 responsiveLayout="scroll"
                 dataKey="id"
             >
-                <Column field="name" header="Ürün İsmi" />
                 <Column field="barcode" header="Barkod" />
-                <Column field="unit" header="Birim" />
+                <Column field="name" header="Ürün İsmi" />
                 <Column field="price" header="Fiyat" />
+                <Column field="unit" header="Birim" body={(rowData) => UNIT_MAP[rowData.unit] || rowData.unit} />
+
                 <Column field="companyName" header="Şirket" />
                 <Column body={actionBodyTemplate} header="İşlemler" />
             </DataTable>

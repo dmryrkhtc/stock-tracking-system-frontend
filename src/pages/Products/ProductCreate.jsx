@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
+import { Toast } from "primereact/toast"; // <-- eklendi
 import ProductService from "../../services/ProductService";
 import CompanyService from "../../services/CompanyService";
 import { UNIT_OPTIONS } from "../../constants/enums";
@@ -16,6 +17,7 @@ export default function ProductCreate({ visible, onHide, onCreated }) {
         barcode: ""
     });
     const [companies, setCompanies] = useState([]);
+    const toast = useRef(null); // <-- toast referansı
 
     useEffect(() => {
         const loadCompanies = async () => {
@@ -35,19 +37,46 @@ export default function ProductCreate({ visible, onHide, onCreated }) {
 
     const handleSave = async () => {
         try {
-            await ProductService.create({
-                ...formData,
-                price: parseFloat(formData.price)
+            await ProductService.create({ ...formData, price: parseFloat(formData.price) });
+            onCreated();
+            onHide();
+            toast.current?.show({
+                severity: "success",
+                summary: "Eklendi",
+                detail: `${formData.name} başarıyla eklendi.`,
+                life: 3000
             });
-            onCreated(); // ürün listesi güncellensin
-            onHide(); // modal kapan
         } catch (err) {
-            console.error("Ürün eklenirken hata:", err);
+            if (err.response && err.response.status === 400) {
+                const backendMessage = err.response.data?.message || "";
+                let userMessage = "İşlem sırasında bir hata oluştu.";
+
+                // Barkod özel kontrolü
+                if (backendMessage.toLowerCase().includes("barcode")) {
+                    userMessage = "Aynı barkod no’ya sahip bir ürün olamaz!";
+                }
+
+                toast.current?.show({
+                    severity: "warn",
+                    summary: "Uyarı",
+                    detail: userMessage,
+                    life: 4000
+                });
+            } else {
+                toast.current?.show({
+                    severity: "error",
+                    summary: "Hata",
+                    detail: "Ürün eklenirken hata oluştu.",
+                    life: 4000
+                });
+            }
         }
+
     };
 
     return (
-        <Dialog header="Yeni Ürün Ekle" visible={visible} style={{ width: '500px' }} onHide={onHide}>
+        <Dialog header="Yeni Ürün Ekle" visible={visible} style={{ width: "500px" }} onHide={onHide}>
+            <Toast ref={toast} /> {/* <-- toast burada */}
             <div className="p-fluid">
                 <div className="field">
                     <label>Ürün İsmi</label>
