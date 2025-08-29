@@ -1,43 +1,57 @@
-import React, { useEffect, useState } from "react";
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import React, { useEffect, useRef, useState } from "react";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import { Toast } from "primereact/toast";
 import CompanyService from "../../services/CompanyService";
 import CompanyCreate from "./CompanyCreate";
-import CompanyUpdate from "./CompanyUpdate"; // Update modal component
+import CompanyUpdate from "./CompanyUpdate"; // ✅ sadece bu olsun
 
 export default function CompanyList() {
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(true);
+
     const [createVisible, setCreateVisible] = useState(false);
     const [updateVisible, setUpdateVisible] = useState(false);
-    const [selectedCompany, setSelectedCompany] = useState(null);
-    const [expandedRows, setExpandedRows] = useState(null);
-    const [rowDetails, setRowDetails] = useState({}); // detay cache
+    const [selectedCompanyId, setSelectedCompanyId] = useState(null);
 
-    useEffect(() => {
-        loadCompanies();
-    }, []);
+    const toast = useRef(null);
 
-    const loadCompanies = async () => {
+    const fetchCompanies = async () => {
         setLoading(true);
         try {
-            const response = await CompanyService.getAll();
-            setCompanies(response.data || []);
-        } catch (error) {
-            console.error("Şirketler yüklenirken hata:", error);
+            const res = await CompanyService.getAll();
+            setCompanies(res.data || []);
+        } catch (err) {
+            console.error("Şirketler yüklenirken hata:", err);
         } finally {
             setLoading(false);
         }
     };
 
+    useEffect(() => {
+        fetchCompanies();
+    }, []);
+
     const deleteCompany = async (id) => {
         if (window.confirm("Bu şirketi silmek istediğinize emin misiniz?")) {
             try {
                 await CompanyService.delete(id);
-                loadCompanies();
-            } catch (error) {
-                console.error("Şirket silinirken hata:", error);
+                await fetchCompanies();
+                toast.current?.show({
+                    severity: "success",
+                    summary: "Silindi",
+                    detail: "Şirket başarıyla silindi.",
+                    life: 3000,
+                });
+            } catch (err) {
+                console.error("Silme hatası:", err);
+                toast.current?.show({
+                    severity: "error",
+                    summary: "Hata",
+                    detail: "Şirket silinirken bir hata oluştu.",
+                    life: 4000,
+                });
             }
         }
     };
@@ -47,55 +61,25 @@ export default function CompanyList() {
             <Button
                 label="Güncelle"
                 icon="pi pi-pencil"
-                className="p-button-warning"
+                severity="warning"
                 onClick={() => {
-                    setSelectedCompany(rowData);
+                    setSelectedCompanyId(rowData.id); // ✅ sadece id gönder
                     setUpdateVisible(true);
                 }}
             />
             <Button
                 label="Sil"
                 icon="pi pi-trash"
-                className="p-button-danger"
+                severity="danger"
                 onClick={() => deleteCompany(rowData.id)}
             />
         </div>
     );
 
-    const rowExpansionTemplate = (rowData) => {
-        const details = rowDetails[rowData.id];
-
-        if (!details) return <p>Yükleniyor...</p>;
-
-        return (
-            <div className="p-3">
-                <h5>{details.name} Detayları</h5>
-                <p><strong>Vergi No:</strong> {details.taxNo}</p>
-                <p><strong>Adres:</strong> {details.address}</p>
-                <p><strong>Telefon:</strong> {details.telNo}</p>
-                <p><strong>Email:</strong> {details.email}</p>
-            </div>
-        );
-    };
-
-    const onRowToggle = async (e) => {
-        // PrimeReact >= v9: e.data bir obje {id: rowData, ...}
-        setExpandedRows(e.data);
-
-        for (let id in e.data) {
-            if (!rowDetails[id]) {
-                try {
-                    const res = await CompanyService.getById(id);
-                    setRowDetails(prev => ({ ...prev, [id]: res.data }));
-                } catch (err) {
-                    console.error("Detay yüklenirken hata:", err);
-                }
-            }
-        }
-    };
-
     return (
         <div className="p-4">
+            <Toast ref={toast} />
+
             <div className="flex justify-between items-center mb-3">
                 <h1>Şirketler</h1>
                 <Button
@@ -109,39 +93,50 @@ export default function CompanyList() {
                 value={companies}
                 loading={loading}
                 paginator
-                rows={5}
+                rows={10}
                 responsiveLayout="scroll"
                 dataKey="id"
-                expandedRows={expandedRows}
-                onRowToggle={onRowToggle}
-                rowExpansionTemplate={rowExpansionTemplate}
             >
-                <Column expander style={{ width: "3em" }} />
                 <Column field="name" header="Şirket İsmi" />
                 <Column field="telNo" header="Telefon" />
                 <Column field="email" header="E-Posta" />
+                <Column field="address" header="Adres" />
+                <Column field="taxNo" header="Vergi No" />
                 <Column body={actionBodyTemplate} header="İşlemler" />
             </DataTable>
 
-            {/* Create Modal */}
+            {/* Create Dialog */}
             <CompanyCreate
                 visible={createVisible}
                 onHide={() => setCreateVisible(false)}
-                onCreated={loadCompanies}
+                onCreated={(created) => {
+                    setCreateVisible(false);
+                    fetchCompanies();
+                    toast.current?.show({
+                        severity: "success",
+                        summary: "Eklendi",
+                        detail: `${created?.name || "Şirket"} başarıyla eklendi.`,
+                        life: 3000,
+                    });
+                }}
             />
 
-            {/* Update Modal */}
-            {selectedCompany && (
-                <CompanyUpdate
-                    visible={updateVisible}
-                    onHide={() => setUpdateVisible(false)}
-                    company={selectedCompany}
-                    onUpdated={() => {
-                        loadCompanies();
-                        setUpdateVisible(false);
-                    }}
-                />
-            )}
+            {/* Update Dialog */}
+            <CompanyUpdate
+                visible={updateVisible}
+                onHide={() => setUpdateVisible(false)}
+                companyId={selectedCompanyId}
+                onUpdated={() => {
+                    setUpdateVisible(false);
+                    fetchCompanies();
+                    toast.current?.show({
+                        severity: "success",
+                        summary: "Güncellendi",
+                        detail: "Şirket bilgileri başarıyla güncellendi.",
+                        life: 3000,
+                    });
+                }}
+            />
         </div>
     );
 }

@@ -6,6 +6,9 @@ export const STORE_OPTIONS = [
   export const UNIT_OPTIONS = [
     { label: "Kg", value: 0 },
     { label: "Liter", value: 1 },
-    { label: "Piece", value: 2 },
+    { label: "Adet", value: 2 },
   ];
-  
+   export const MOVEMENT_TYPE_OPTIONS=[
+{label:"Giriş", value:0},
+{label:"Çıkış",value:1}
+   ];

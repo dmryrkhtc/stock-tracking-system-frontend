@@ -11,6 +11,8 @@ import ProductList from './pages/Products/ProductList';
 import ProductUpdate from './pages/Products/ProductUpdate';
 import StockList from './pages/Stocks/StockList';
 import StockUpdate from './pages/Stocks/StockUpdate';
+import StockMovementList from './pages/StockMovements/StockMovementList';
+import StockMovementUpdate from './pages/StockMovements/StockMovementUpdate';
 
 
 
@@ -30,6 +32,8 @@ function App() {
       <Route path="/products/update/:id" element={<ProductUpdate />} />
       <Route path="/stocks" element={<StockList />} />
       <Route path="/stocks/update/:id" element={<StockUpdate />} />
+      <Route path="/movements" element={<StockMovementList />} />
+      <Route path="/movements/update/:id" element={<StockMovementUpdate />} />
    </Routes>
    </div>
    </div>
