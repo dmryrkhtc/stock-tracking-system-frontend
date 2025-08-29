@@ -1,115 +1,104 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { Dropdown } from "primereact/dropdown";
+import { Toast } from "primereact/toast";   // ✅ Toast import
 import CompanyService from "../../services/CompanyService";
 
-export default function CompanyUpdate() {
-    const { id } = useParams();
-    const navigate = useNavigate();
+export default function CompanyUpdate({ visible, onHide, companyId, onUpdated }) {
     const [company, setCompany] = useState({
-        id: 0,
+        id: "",
         name: "",
         telNo: "",
         email: "",
-        taxNo: "",
-        address: ""
+        address: "",
+        taxNo: ""
     });
 
+    const toast = useRef(null); // ✅ Toast için ref
+
     useEffect(() => {
-        loadCompany();
-    }, []);
-
-    const loadCompany = async () => {
-        try {
-            const response = await CompanyService.getById(id);
-            setCompany(response.data);
-        } catch (error) {
-            console.error("Şirket yüklenemedi:", error);
+        if (companyId) {
+            CompanyService.getById(companyId).then((res) => setCompany(res.data));
         }
-    };
+    }, [companyId]);
 
-    const handleChange = (e) => {
-        setCompany({ ...company, [e.target.name]: e.target.value });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         try {
             await CompanyService.update(company);
-            navigate("/companies"); // Güncelleme sonrası listeye dön
-        } catch (error) {
-            console.error("Güncelleme hatası:", error);
+            toast.current?.show({
+                severity: "success",
+                summary: "Başarılı",
+                detail: "Şirket bilgileri güncellendi.",
+                life: 3000,
+            });
+            onUpdated();
+            onHide();
+        } catch (err) {
+            if (err.response && err.response.status === 400) {
+                toast.current?.show({
+                    severity: "warn",
+                    summary: "Uyarı",
+                    detail: err.response.data.message || "Geçersiz işlem.",
+                    life: 4000,
+                });
+            } else {
+                toast.current?.show({
+                    severity: "error",
+                    summary: "Hata",
+                    detail: "İşlem sırasında bir hata oluştu.",
+                    life: 4000,
+                });
+            }
         }
+
     };
 
     return (
+        <>
+            {/* ✅ Toast ekledik */}
+            <Toast ref={toast} />
 
-        <div className="p-4">
-            <h2>Şirket Güncelle</h2>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-md">
-                <span className="p-float-label">
+            <Dialog
+                header="Şirket Güncelle"
+                visible={visible}
+                style={{ width: "30vw" }}
+                modal
+                onHide={onHide}
+            >
+                <div className="flex flex-col gap-3">
                     <InputText
-                        id="name"
-                        name="name"
                         value={company.name}
-                        onChange={handleChange}
+                        onChange={(e) => setCompany({ ...company, name: e.target.value })}
+                        placeholder="Şirket Adı"
                     />
-                    <label htmlFor="name">Şirket Adı</label>
-                </span>
-
-                <span className="p-float-label">
                     <InputText
-                        id="telNo"
-                        name="telNo"
                         value={company.telNo}
-                        onChange={handleChange}
+                        onChange={(e) => setCompany({ ...company, telNo: e.target.value })}
+                        placeholder="Telefon"
                     />
-                    <label htmlFor="telNo">Telefon</label>
-                </span>
-
-                <span className="p-float-label">
                     <InputText
-                        id="email"
-                        name="email"
                         value={company.email}
-                        onChange={handleChange}
+                        onChange={(e) => setCompany({ ...company, email: e.target.value })}
+                        placeholder="E-Posta"
                     />
-                    <label htmlFor="email">E-Posta</label>
-                </span>
-
-                <span className="p-float-label">
                     <InputText
-                        id="taxNo"
-                        name="taxNo"
-                        value={company.taxNo}
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="taxNo">Vergi No</label>
-                </span>
-
-                <span className="p-float-label">
-                    <InputText
-                        id="address"
-                        name="address"
                         value={company.address}
-                        onChange={handleChange}
+                        onChange={(e) => setCompany({ ...company, address: e.target.value })}
+                        placeholder="Adres"
                     />
-                    <label htmlFor="address">Adres</label>
-                </span>
+                    <InputText
+                        value={company.taxNo}
+                        onChange={(e) => setCompany({ ...company, taxNo: e.target.value })}
+                        placeholder="Vergi No"
+                    />
 
-                <div className="flex gap-2">
-                    <Button type="submit" label="Kaydet" className="p-button-success" />
-                    <Button
-                        type="button"
-                        label="İptal"
-                        className="p-button-secondary"
-                        onClick={() => navigate("/companies")}
-                    />
+                    <div className="flex justify-end gap-2 mt-3">
+                        <Button label="İptal" severity="secondary" onClick={onHide} />
+                        <Button label="Kaydet" onClick={handleSubmit} />
+                    </div>
                 </div>
-            </form>
-        </div>
-
+            </Dialog>
+        </>
     );
 }

@@ -13,7 +13,10 @@ const CompanyService={
     getById:(id)=>axios.get(`${API_URL}/GetCompanyById/${id}`),
 
     //yeni sirketler olusturduk
-    create:(data)=>axios.post(`${API_URL}/CreateCompany`, data),
+    create: async (data) => {
+        const res = await axios.post(`${API_URL}/CreateCompany`, data);
+        return res.data; // <-- böyle olursa component'te direkt created alırsın
+      },
 
     //sirket guncelle
     update:(data)=>axios.put(`${API_URL}/UpdateCompany`,data),
