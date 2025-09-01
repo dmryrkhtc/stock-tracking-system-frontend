@@ -3,11 +3,14 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import StockService from "../../services/StockService";
+import ProductService from "../../services/ProductService";
 import StockCreate from "./StockCreate";
 import StockUpdate from "./StockUpdate";
+import { STORE_OPTIONS } from "../../constants/enums";
 
 export default function StockList() {
     const [stocks, setStocks] = useState([]);
+    const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [createVisible, setCreateVisible] = useState(false);
     const [updateVisible, setUpdateVisible] = useState(false);
@@ -15,6 +18,7 @@ export default function StockList() {
 
     useEffect(() => {
         loadStocks();
+        loadProducts();
     }, []);
 
     const loadStocks = async () => {
@@ -26,6 +30,16 @@ export default function StockList() {
             console.error("Stoklar yüklenirken hata:", err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const loadProducts = async () => {
+        try {
+            const res = await ProductService.getAll();
+            setProducts(res.data || []);
+        } catch (err) {
+            console.error("Ürünler yüklenirken hata:", err);
+            setProducts([]);
         }
     };
 
@@ -60,6 +74,11 @@ export default function StockList() {
         </div>
     );
 
+    const storeBodyTemplate = (rowData) => {
+        const store = STORE_OPTIONS.find(s => s.value === rowData.store);
+        return store ? store.label : rowData.store;
+    };
+
     return (
         <div className="p-4">
             <div className="flex justify-between items-center mb-3">
@@ -79,8 +98,8 @@ export default function StockList() {
                 responsiveLayout="scroll"
                 dataKey="id"
             >
-                <Column field="productId" header="Ürün ID" />
-                <Column field="store" header="Depo" />
+                <Column field="productName" header="Ürün Adı" />
+                <Column field="store" header="Depo" body={storeBodyTemplate} />
                 <Column field="quantity" header="Miktar" />
                 <Column body={actionBodyTemplate} header="İşlemler" />
             </DataTable>
@@ -89,6 +108,7 @@ export default function StockList() {
                 visible={createVisible}
                 onHide={() => setCreateVisible(false)}
                 onCreated={loadStocks}
+                products={products || []}
             />
 
             {selectedStock && (
@@ -96,10 +116,8 @@ export default function StockList() {
                     visible={updateVisible}
                     onHide={() => setUpdateVisible(false)}
                     stock={selectedStock}
-                    onUpdated={() => {
-                        loadStocks();
-                        setUpdateVisible(false);
-                    }}
+                    onUpdated={loadStocks}
+                    products={products || []}
                 />
             )}
         </div>

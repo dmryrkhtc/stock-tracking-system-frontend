@@ -1,67 +1,113 @@
-import React, { useState, useEffect } from "react";
-import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
+import React, { useState, useRef } from "react";
 import { Dropdown } from "primereact/dropdown";
-import StockService from "../../services/StockService";
-import { STORE_OPTIONS } from "../../constants/enums";
+import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
+import { Toast } from "primereact/toast";
+import StockService from "../../services/StockService";
 
-export default function StockCreate({ visible, onHide, onCreated = () => { } }) {
+// Sabit depo seçenekleri
+const STORE_OPTIONS = [
+    { label: "Market", value: "Market" },
+    { label: "Depo", value: "Depo" },
+
+];
+
+export default function StockCreate({ visible, onHide, onCreated, products }) {
+    const toast = useRef(null);
+
     const [formData, setFormData] = useState({
-        productId: "",
+        productId: null,
         store: null,
-        quantity: 0,
+        quantity: ""
     });
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
     const handleSave = async () => {
+        // Boş veya hatalı alan kontrolü
+        if (!formData.productId || !formData.store || !formData.quantity || parseFloat(formData.quantity) <= 0) {
+            toast.current.show({
+                severity: "warn",
+                summary: "Uyarı",
+                detail: "Lütfen tüm alanları doldurun ve miktar 0'dan büyük olmalı!",
+                life: 3000
+            });
+            return;
+        }
+
         try {
-            if (!formData.productId || formData.store === null || !formData.quantity) {
-                alert("Lütfen tüm alanları doldurun!");
-                return;
+            // Backend uyumlu DTO
+            const dto = {
+                productId: parseInt(formData.productId),
+                store: formData.store,            // string: "Market", "Depo", "Sube"
+                quantity: parseFloat(formData.quantity)
+            };
+
+            const res = await StockService.create(dto);
+
+            if (res.success) {
+                toast.current.show({
+                    severity: "success",
+                    summary: "Başarılı",
+                    detail: res.message,
+                    life: 3000
+                });
+                onCreated();
+                onHide();
+                setFormData({ productId: null, store: null, quantity: "" });
+            } else {
+                toast.current.show({
+                    severity: "error",
+                    summary: "Hata",
+                    detail: res.message,
+                    life: 3000
+                });
             }
-            await StockService.create(formData);
-            onCreated(); // parent component’i bilgilendir
-            onHide();
         } catch (err) {
-            console.error("Stok eklenirken hata:", err);
+            console.error(err);
+            toast.current.show({
+                severity: "error",
+                summary: "Hata",
+                detail: "Stok eklenirken hata oluştu.",
+                life: 3000
+            });
         }
     };
 
     return (
-        <Dialog header="Yeni Stok Ekle" visible={visible} style={{ width: '400px' }} onHide={onHide} modal>
+        <Dialog header="Yeni Stok Ekle" visible={visible} style={{ width: "400px" }} onHide={onHide} modal>
+            <Toast ref={toast} />
             <div className="p-fluid">
                 <div className="field">
-                    <label htmlFor="productId">Ürün ID</label>
-                    <InputText
-                        id="productId"
-                        name="productId"
+                    <label>Ürün</label>
+                    <Dropdown
                         value={formData.productId}
-                        onChange={handleChange}
+                        options={products || []}
+                        optionLabel="name"
+                        optionValue="id"
+                        onChange={(e) => setFormData({ ...formData, productId: e.value })}
+                        placeholder="Ürün seçiniz"
                     />
                 </div>
 
                 <div className="field">
-                    <label htmlFor="store">Depo</label>
+                    <label>Depo</label>
                     <Dropdown
                         value={formData.store}
                         options={STORE_OPTIONS}
+                        optionLabel="label"
+                        optionValue="value"
                         onChange={(e) => setFormData({ ...formData, store: e.value })}
                         placeholder="Depo seçiniz"
                     />
                 </div>
 
                 <div className="field">
-                    <label htmlFor="quantity">Miktar</label>
-                    <InputText
-                        id="quantity"
-                        name="quantity"
+                    <label>Miktar</label>
+                    <input
                         type="number"
                         value={formData.quantity}
-                        onChange={(e) => setFormData({ ...formData, quantity: parseFloat(e.target.value) })}
+                        onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                        className="p-inputtext p-component"
+                        min={1}
                     />
                 </div>
             </div>

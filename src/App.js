@@ -13,7 +13,7 @@ import StockList from './pages/Stocks/StockList';
 import StockUpdate from './pages/Stocks/StockUpdate';
 import StockMovementList from './pages/StockMovements/StockMovementList';
 import StockMovementUpdate from './pages/StockMovements/StockMovementUpdate';
-
+import StockCreate from './pages/Stocks/StockCreate';
 
 
 function App() {
@@ -34,6 +34,7 @@ function App() {
       <Route path="/stocks/update/:id" element={<StockUpdate />} />
       <Route path="/movements" element={<StockMovementList />} />
       <Route path="/movements/update/:id" element={<StockMovementUpdate />} />
+      <Route path="/stocks/create" element={<StockCreate />} />
    </Routes>
    </div>
    </div>
