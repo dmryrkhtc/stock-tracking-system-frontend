@@ -59,29 +59,15 @@ export default function ProductUpdate({ visible, onHide, product, onUpdated }) {
                 life: 3000
             });
         } catch (err) {
-            if (err.response && err.response.status === 400) {
-                const backendMessage = err.response.data?.message || "";
-                let userMessage = "İşlem sırasında bir hata oluştu.";
+            // Backend'den gelen mesaj
+            const backendMessage = err.response?.data?.message || "İşlem sırasında bir hata oluştu.";
 
-                // Barkod özel kontrolü
-                if (backendMessage.toLowerCase().includes("barkod")) {
-                    userMessage = "Aynı barkod no’ya sahip bir ürün olamaz!";
-                }
-
-                toast.current?.show({
-                    severity: "warn",
-                    summary: "Uyarı",
-                    detail: userMessage,
-                    life: 4000
-                });
-            } else {
-                toast.current?.show({
-                    severity: "error",
-                    summary: "Hata",
-                    detail: "Ürün güncellenirken hata oluştu.",
-                    life: 4000
-                });
-            }
+            toast.current?.show({
+                severity: err.response?.status === 400 ? "warn" : "error",
+                summary: err.response?.status === 400 ? "Uyarı" : "Hata",
+                detail: backendMessage, // <-- Backend mesajını direkt gösteriyoruz
+                life: 4000
+            });
         }
     };
 
@@ -96,7 +82,7 @@ export default function ProductUpdate({ visible, onHide, product, onUpdated }) {
                 <div className="field">
                     <label>Şirket</label>
                     <Dropdown
-                        value={formData.id}
+                        value={formData.companyId}
                         options={companies.map(c => ({ label: c.name, value: c.id }))}
                         onChange={(e) => setFormData({ ...formData, companyId: e.value })}
                     />
@@ -119,8 +105,8 @@ export default function ProductUpdate({ visible, onHide, product, onUpdated }) {
                 </div>
 
                 <div className="flex gap-2 mt-3">
-                    <Button label="İptal" severity="secondary" onClick={onHide} />
-                    <Button label="Kaydet" severity="success" onClick={handleSave} />
+                    <Button label="Kaydet" severity="success" onClick={handleSave} />  <Button label="İptal" severity="secondary" onClick={onHide} />
+
                 </div>
             </div>
         </Dialog>

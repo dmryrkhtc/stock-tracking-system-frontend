@@ -94,8 +94,8 @@ export default function CompanyUpdate({ visible, onHide, companyId, onUpdated })
                     />
 
                     <div className="flex justify-end gap-2 mt-3">
-                        <Button label="İptal" severity="secondary" onClick={onHide} />
-                        <Button label="Kaydet" onClick={handleSubmit} />
+
+                        <Button label="Kaydet" onClick={handleSubmit} /><Button label="İptal" severity="secondary" onClick={onHide} />
                     </div>
                 </div>
             </Dialog>

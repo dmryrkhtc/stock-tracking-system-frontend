@@ -59,11 +59,12 @@ export default function CompanyList() {
     };
 
     const actionBodyTemplate = (rowData) => (
-        <div className="flex gap-2">
+        <div className="flex gap-3">
             <Button
                 label="Güncelle"
                 icon="pi pi-pencil"
                 severity="warning"
+                className="p-button-sm" // daha küçük boyut
                 onClick={() => {
                     setSelectedCompanyId(rowData.id); // ✅ sadece id gönder
                     setUpdateVisible(true);
@@ -73,6 +74,7 @@ export default function CompanyList() {
                 label="Sil"
                 icon="pi pi-trash"
                 severity="danger"
+                className="p-button-sm" // daha küçük boyut
                 onClick={() => deleteCompany(rowData.id)}
             />
         </div>
@@ -81,12 +83,14 @@ export default function CompanyList() {
     return (
         <div className="p-4">
             <Toast ref={toast} />
-
+            <h1>Şirketler</h1>
             <div className="flex justify-between items-center mb-3">
-                <h1>Şirketler</h1>
+
                 <Button
                     label="Yeni Şirket Ekle"
                     icon="pi pi-plus"
+
+                    className="p-button-sm" // daha küçük boyut
                     onClick={() => setCreateVisible(true)}
                 />
             </div>

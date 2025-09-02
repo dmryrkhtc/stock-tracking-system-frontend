@@ -62,6 +62,7 @@ export default function ProductList() {
                 label="Sil"
                 icon="pi pi-trash"
                 className="p-button-danger"
+
                 onClick={() => deleteProduct(rowData.id)}
             />
         </div>

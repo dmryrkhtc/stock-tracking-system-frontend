@@ -8,7 +8,7 @@ getAll:()=>axios.get(`${API_URL}/ReadProductSummary`),
 
 getById:(id)=>axios.get(`${API_URL}/ReadProductById/${id}`),
 
-create:(data)=>axios.post(`${API_URL}/CreateProduct`,data),
+    create:(data)=>axios.post(`${API_URL}/CreateProduct`,data),
 
 update:(data)=>axios.put(`${API_URL}/UpdateProduct`,data),
 
