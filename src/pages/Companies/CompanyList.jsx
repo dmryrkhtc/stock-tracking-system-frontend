@@ -21,7 +21,9 @@ export default function CompanyList() {
         setLoading(true);
         try {
             const res = await CompanyService.getAll();
-            setCompanies(res.data || []);
+            const data = res.data || [];
+            // son eklenen en başta olacak şekilde ters çevir
+            setCompanies(data.reverse());
         } catch (err) {
             console.error("Şirketler yüklenirken hata:", err);
         } finally {
