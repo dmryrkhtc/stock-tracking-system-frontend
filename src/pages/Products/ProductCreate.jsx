@@ -47,6 +47,7 @@ export default function ProductCreate({ visible, onHide, onCreated }) {
                 life: 3000
             });
         } catch (err) {
+            console.log("error : ", err);
             if (err.response && err.response.status === 400) {
                 const backendMessage = err.response.data?.message || "";
                 let userMessage = "İşlem sırasında bir hata oluştu.";

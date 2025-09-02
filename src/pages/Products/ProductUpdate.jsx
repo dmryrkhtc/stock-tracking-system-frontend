@@ -96,7 +96,7 @@ export default function ProductUpdate({ visible, onHide, product, onUpdated }) {
                 <div className="field">
                     <label>Şirket</label>
                     <Dropdown
-                        value={formData.companyId}
+                        value={formData.id}
                         options={companies.map(c => ({ label: c.name, value: c.id }))}
                         onChange={(e) => setFormData({ ...formData, companyId: e.value })}
                     />

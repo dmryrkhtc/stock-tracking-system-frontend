@@ -42,8 +42,8 @@ export default function StockCreate({ visible, onHide, onCreated, products }) {
             };
 
             const res = await StockService.create(dto);
-
-            if (res.success) {
+            console.log("RES : ", res);
+            if (res.data.success) {
                 toast.current.show({
                     severity: "success",
                     summary: "Başarılı",
@@ -54,10 +54,11 @@ export default function StockCreate({ visible, onHide, onCreated, products }) {
                 onHide();
                 setFormData({ productId: null, store: null, quantity: "" });
             } else {
+                console.log("Else : ", res.data);
                 toast.current.show({
                     severity: "error",
                     summary: "Hata",
-                    detail: res.message,
+                    detail: res.data.message,
                     life: 3000
                 });
             }

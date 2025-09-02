@@ -91,7 +91,7 @@ const CompanyCreate = ({ visible, onHide, onCreated }) => {
         >
             <div className="p-fluid">
                 <div className="field">
-                    <label htmlFor="name">Ad <span className="p-error">*</span></label>
+                    <label htmlFor="name">Şirker Adı <span className="p-error">*</span></label>
                     <InputText
                         id="name"
                         name="name"
@@ -102,7 +102,7 @@ const CompanyCreate = ({ visible, onHide, onCreated }) => {
                 </div>
 
                 <div className="field">
-                    <label htmlFor="telNo">Telefon</label>
+                    <label htmlFor="telNo">Şirket Telefon</label>
                     <InputText
                         id="telNo"
                         name="telNo"
@@ -112,7 +112,7 @@ const CompanyCreate = ({ visible, onHide, onCreated }) => {
                 </div>
 
                 <div className="field">
-                    <label htmlFor="email">E-posta</label>
+                    <label htmlFor="email">Şirket E-posta</label>
                     <InputText
                         id="email"
                         name="email"
@@ -122,7 +122,7 @@ const CompanyCreate = ({ visible, onHide, onCreated }) => {
                 </div>
 
                 <div className="field">
-                    <label htmlFor="taxNo">Vergi No <span className="p-error">*</span></label>
+                    <label htmlFor="taxNo">Şirket Vergi No <span className="p-error">*</span></label>
                     <InputText
                         id="taxNo"
                         name="taxNo"
@@ -133,7 +133,7 @@ const CompanyCreate = ({ visible, onHide, onCreated }) => {
                 </div>
 
                 <div className="field">
-                    <label htmlFor="address">Adres</label>
+                    <label htmlFor="address">Şirket Adresi</label>
                     <InputText
                         id="address"
                         name="address"
