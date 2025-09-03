@@ -15,23 +15,29 @@ export default function StockList() {
     const [createVisible, setCreateVisible] = useState(false);
     const [updateVisible, setUpdateVisible] = useState(false);
     const [selectedStock, setSelectedStock] = useState(null);
-
+    const UNIT_MAP = {
+        Piece: "Adet",
+        Kg: "Kilogram",
+        Liter: "Litre"
+    };
     useEffect(() => {
         loadStocks();
         loadProducts();
     }, []);
-
+    //idye göre sıralandı buyukten kucuge
     const loadStocks = async () => {
         setLoading(true);
         try {
             const res = await StockService.getAll();
-            setStocks(res.data || []);
+            const sortedStocks = (res.data || []).sort((a, b) => b.id - a.id);
+            setStocks(sortedStocks);
         } catch (err) {
             console.error("Stoklar yüklenirken hata:", err);
         } finally {
             setLoading(false);
         }
     };
+
 
     const loadProducts = async () => {
         try {
@@ -60,11 +66,21 @@ export default function StockList() {
                 label="Güncelle"
                 icon="pi pi-pencil"
                 className="p-button-warning"
-                onClick={() => {
-                    setSelectedStock(rowData);
-                    setUpdateVisible(true);
+                onClick={async () => {
+                    try {
+                        const res = await StockService.getById(rowData.id);
+                        if (res.data) {
+                            setSelectedStock(res.data); // ✅ DTO’yu direkt gönder
+                            setUpdateVisible(true);
+                        } else {
+                            alert("Stok bulunamadı");
+                        }
+                    } catch (err) {
+                        console.error("Stok yüklenirken hata:", err);
+                    }
                 }}
             />
+
             <Button
                 label="Sil"
                 icon="pi pi-trash"
@@ -94,13 +110,15 @@ export default function StockList() {
                 value={stocks}
                 loading={loading}
                 paginator
-                rows={5}
+                rows={10}
                 responsiveLayout="scroll"
                 dataKey="id"
             >
                 <Column field="productName" header="Ürün Adı" />
-                <Column field="store" header="Depo" body={storeBodyTemplate} />
                 <Column field="quantity" header="Miktar" />
+                <Column field="unit" header="Birim" body={(rowData) => UNIT_MAP[rowData.unit] || rowData.unit} />
+                <Column field="store" header="Depo" body={storeBodyTemplate} />
+
                 <Column body={actionBodyTemplate} header="İşlemler" />
             </DataTable>
 

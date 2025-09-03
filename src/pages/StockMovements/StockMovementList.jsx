@@ -33,6 +33,7 @@ export default function StockMovementList() {
 
     return (
         <div>
+            <h1>Stok Hareketleri</h1>
             <Button label="Yeni Hareket" icon="pi pi-plus" onClick={() => setShowCreate(true)} />
 
             {showCreate && (

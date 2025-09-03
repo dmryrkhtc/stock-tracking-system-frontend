@@ -11,6 +11,11 @@ const STORE_OPTIONS = [
     { label: "Depo", value: "Depo" },
 
 ];
+const UNIT_OPTIONS = [
+    { label: "Adet", value: 2 },
+    { label: "Kilogram", value: 0 },
+    { label: "Litre", value: 1 }
+];
 
 export default function StockCreate({ visible, onHide, onCreated, products }) {
     const toast = useRef(null);
@@ -37,8 +42,9 @@ export default function StockCreate({ visible, onHide, onCreated, products }) {
             // Backend uyumlu DTO
             const dto = {
                 productId: parseInt(formData.productId),
-                store: formData.store,            // string: "Market", "Depo", "Sube"
-                quantity: parseFloat(formData.quantity)
+                store: formData.store,            // string: "Market", "Depo"
+                quantity: parseFloat(formData.quantity),
+                unit: formData.unit
             };
 
             const res = await StockService.create(dto);
@@ -90,6 +96,29 @@ export default function StockCreate({ visible, onHide, onCreated, products }) {
                 </div>
 
                 <div className="field">
+                    <label>Miktar</label>
+                    <input
+                        type="number"
+                        value={formData.quantity}
+                        onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                        className="p-inputtext p-component"
+                        min={1}
+                    />
+                </div>
+                <div className="field">
+                    <label>Birim</label>
+                    <Dropdown
+                        value={formData.unit}
+                        options={UNIT_OPTIONS}
+                        optionLabel="label"
+                        optionValue="value"
+                        onChange={(e) => setFormData({ ...formData, unit: e.value })}
+                        placeholder="Birim seçiniz"
+                    />
+                </div>
+
+
+                <div className="field">
                     <label>Depo</label>
                     <Dropdown
                         value={formData.store}
@@ -101,21 +130,11 @@ export default function StockCreate({ visible, onHide, onCreated, products }) {
                     />
                 </div>
 
-                <div className="field">
-                    <label>Miktar</label>
-                    <input
-                        type="number"
-                        value={formData.quantity}
-                        onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                        className="p-inputtext p-component"
-                        min={1}
-                    />
-                </div>
             </div>
 
             <div className="flex gap-2 mt-3 justify-end">
-                <Button label="İptal" severity="secondary" onClick={onHide} />
-                <Button label="Kaydet" severity="success" onClick={handleSave} />
+                <Button label="Kaydet" severity="success" onClick={handleSave} /><Button label="İptal" severity="secondary" onClick={onHide} />
+
             </div>
         </Dialog>
     );

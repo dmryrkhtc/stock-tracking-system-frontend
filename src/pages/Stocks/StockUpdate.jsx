@@ -10,14 +10,21 @@ const STORE_OPTIONS = [
     { label: "Market", value: "Market" },
     { label: "Depo", value: "Depo" },
 ];
+const UNIT_OPTIONS = [
+    { label: "Adet", value: 2 },
+    { label: "Kilogram", value: 0 },
+    { label: "Litre", value: 1 }
+];
 
-export default function StockUpdate({ visible, onHide, stock, onUpdated, products }) {
+
+export default function StockUpdate({ visible, onHide, stock, onUpdated, products, unit }) {
     const toast = useRef(null);
 
     const [formData, setFormData] = useState({
         productId: null,
         store: null,
-        quantity: ""
+        quantity: "",
+        unit: null
     });
 
     // Güncelleme ekranı açıldığında stock verilerini doldur
@@ -26,7 +33,8 @@ export default function StockUpdate({ visible, onHide, stock, onUpdated, product
             setFormData({
                 productId: stock.productId,
                 store: stock.store,
-                quantity: stock.quantity
+                quantity: stock.quantity,
+                unit: stock.unit
             });
         }
     }, [stock]);
@@ -49,12 +57,14 @@ export default function StockUpdate({ visible, onHide, stock, onUpdated, product
             const dto = {
                 id: stock.id,
                 quantity: parseFloat(formData.quantity),
-                store: formData.store
+                store: formData.store,
+                unit: formData.unit
             };
 
             const res = await StockService.update(dto);
+            console.log(res)
+            if (res.data.success) {
 
-            if (res.success) {
                 toast.current.show({
                     severity: "success",
                     summary: "Başarılı",
@@ -117,6 +127,17 @@ export default function StockUpdate({ visible, onHide, stock, onUpdated, product
                         onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                         className="p-inputtext p-component"
                         min={1}
+                    />
+                </div>
+                <div className="field">
+                    <label>Birim</label>
+                    <Dropdown
+                        value={formData.unit}
+                        options={UNIT_OPTIONS}
+                        optionLabel="label"
+                        optionValue="value"
+                        onChange={(e) => setFormData({ ...formData, unit: e.value })}
+                        placeholder="Birim seçiniz"
                     />
                 </div>
             </div>

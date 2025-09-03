@@ -99,6 +99,7 @@ export default function CompanyList() {
                 value={companies}
                 loading={loading}
                 paginator
+                //10 ürün geldi
                 rows={10}
                 responsiveLayout="scroll"
                 dataKey="id"

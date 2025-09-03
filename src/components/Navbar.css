@@ -1,4 +1,4 @@
-.navbar {
+/* .navbar {
   position: fixed;
   top: 0;
   left: 0;
@@ -22,7 +22,7 @@
 
 .navbar-logo {
   height: 200px; /* logo büyük */
-  width: auto;
+  /* width: auto;
   cursor: pointer;
 }
 
@@ -51,4 +51,4 @@
   background-color: white;
   color: #3b1648;
   border-color: white;
-}
+} */ 
