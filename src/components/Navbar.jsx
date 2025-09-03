@@ -4,12 +4,19 @@ import logo from "../pictures/logo.png";
 
 function Navbar() {
     return (
-        <div className="navbar">
+        <nav className="navbar">
             <div className="navbar-left">
-                <img src={logo} alt="Logo" className="navbar-logo" />
-                <span className="navbar-title">Stok takip sistemleri</span>
+                {/* Logo tıklandığında localhost:3000'e yönlensin */}
+                <a href="http://localhost:3000/">
+                    <img src={logo} alt="Logo" className="navbar-logo" />
+                </a>
+                <span className="navbar-title">Stok Takip Sistemi</span>
             </div>
-        </div>
+            <div className="navbar-right">
+                <button className="navbar-btn">Profil</button>
+                <button className="navbar-btn">Çıkış</button>
+            </div>
+        </nav>
     );
 }
 

@@ -63,13 +63,6 @@ const CompanyCreate = ({ visible, onHide, onCreated }) => {
     const footer = (
         <div className="flex justify-end gap-2">
             <Button
-                label="İptal"
-                icon="pi pi-times"
-                severity="secondary"
-                onClick={onHide}
-                disabled={submitting}
-            />
-            <Button
                 label="Kaydet"
                 icon="pi pi-check"
                 severity="success"
@@ -77,6 +70,14 @@ const CompanyCreate = ({ visible, onHide, onCreated }) => {
                 loading={submitting}
                 disabled={invalid || submitting}
             />
+            <Button
+                label="İptal"
+                icon="pi pi-times"
+                severity="secondary"
+                onClick={onHide}
+                disabled={submitting}
+            />
+
         </div>
     );
 
@@ -91,7 +92,7 @@ const CompanyCreate = ({ visible, onHide, onCreated }) => {
         >
             <div className="p-fluid">
                 <div className="field">
-                    <label htmlFor="name">Şirker Adı <span className="p-error">*</span></label>
+                    <label htmlFor="name">Şirket Adı <span className="p-error">*</span></label>
                     <InputText
                         id="name"
                         name="name"

@@ -18,6 +18,7 @@ export default function ProductList() {
     useEffect(() => {
         loadProducts();
     }, []);
+
     const UNIT_MAP = {
         Piece: "Adet",
         Kg: "Kilogram",
@@ -28,7 +29,8 @@ export default function ProductList() {
         setLoading(true);
         try {
             const res = await ProductService.getAll();
-            setProducts(res.data || []);
+            // Son eklenen ürün en başta olacak şekilde ters çevir
+            setProducts((res.data || []).slice().reverse());
         } catch (err) {
             console.error("Ürünler yüklenirken hata:", err);
         } finally {
@@ -62,7 +64,6 @@ export default function ProductList() {
                 label="Sil"
                 icon="pi pi-trash"
                 className="p-button-danger"
-
                 onClick={() => deleteProduct(rowData.id)}
             />
         </div>
@@ -83,15 +84,19 @@ export default function ProductList() {
                 value={products}
                 loading={loading}
                 paginator
-                rows={5}
+                rows={10} // Sayfa başına 10 ürün
+
                 responsiveLayout="scroll"
                 dataKey="id"
             >
                 <Column field="barcode" header="Barkod" />
                 <Column field="name" header="Ürün İsmi" />
                 <Column field="price" header="Fiyat" />
-                <Column field="unit" header="Birim" body={(rowData) => UNIT_MAP[rowData.unit] || rowData.unit} />
-
+                <Column
+                    field="unit"
+                    header="Birim"
+                    body={(rowData) => UNIT_MAP[rowData.unit] || rowData.unit}
+                />
                 <Column field="companyName" header="Şirket" />
                 <Column body={actionBodyTemplate} header="İşlemler" />
             </DataTable>

@@ -1,9 +1,3 @@
-.sidebar-container {
-    position: relative;  /* artık navbar altından açılacak */
-    z-index: 999;
-}
-
-/* Toggle butonu navbar üstünde sabit kalabilir */
 .menu-toggle-btn {
     font-size: 50px;    
     color: #2c3e50;
@@ -11,56 +5,66 @@
     margin: 10px;
 }
 
-/* Sidebar navbar altından açılacak */
 .custom-sidebar {
     background: #3b1648;
-    color: rgb(255, 255, 255) !important;
-    width: 220px !important;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
-    top: 50px !important; /* navbar yüksekliği kadar aşağıda */
-    height: calc(100% - 100px) !important; /* navbar hariç yüksekliği */
-    transition: transform 0.2s ease; /* açılma animasyonu */
-    
-}
-.custom-sidebar a{
-    color:white;
-    text-decoration: none;
+    color: white !important;
+    width: 300px !important;
+    padding-top: 20px;
 }
 
-/* Header */
 .sidebar-header {
-    padding: 15px;
+    padding: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     text-align: center;
-    font-size: 18px;
+    font-size: 34px; /* Menu yazısı daha büyük */
     font-weight: bold;
+    margin-top: 60px;
+    color: rgb(255, 115, 0);
 }
 
-/* Linkler */
+.sidebar-user {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 10px;
+    margin-top: 30px;
+}
+
 .sidebar-links {
     list-style: none;
     padding: 0;
     margin: 0;
-
 }
 
 .sidebar-links li {
-    padding: 12px 20px;
+    padding: 18px 0;
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    font-size: 15px;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-links li:hover {
-    background: rgba(255, 90, 7, 0.948);
+    background: rgba(255, 90, 7, 0.95);
 }
-/* Kullanıcı alanı */
-.sidebar-user {
-    padding: 5px 20px;
-    background-color: rgba(255, 145, 1, 0.095);
-    margin-bottom: 10px;
-    border-radius: 5px;
-    font-size: 15.0px;
+
+.custom-sidebar a {
+    color: white;
+    text-decoration: none;
 }
+.menu-toggle-btn {
+    font-size: 40px;    
+    color: #2c3e50; /* istediğin renk */
+    cursor: pointer;
+    position: fixed;   /* sabitle */
+    top: 15px;         /* navbarın altına biraz boşluk */
+    left: 20px;        /* solda konumlandır */
+    z-index: 1100;     /* sidebar’dan üstte görünmesini sağlar */
+    background: transparent;
+    border: none;
+}
+

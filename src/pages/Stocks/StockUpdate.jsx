@@ -9,7 +9,6 @@ import StockService from "../../services/StockService";
 const STORE_OPTIONS = [
     { label: "Market", value: "Market" },
     { label: "Depo", value: "Depo" },
-
 ];
 
 export default function StockUpdate({ visible, onHide, stock, onUpdated, products }) {
@@ -21,7 +20,7 @@ export default function StockUpdate({ visible, onHide, stock, onUpdated, product
         quantity: ""
     });
 
-    // Stock geldiğinde formu doldur
+    // Güncelleme ekranı açıldığında stock verilerini doldur
     useEffect(() => {
         if (stock) {
             setFormData({
@@ -32,12 +31,15 @@ export default function StockUpdate({ visible, onHide, stock, onUpdated, product
         }
     }, [stock]);
 
+    // Ürün adını bulmak için yardımcı
+    const selectedProduct = products?.find(p => p.id === formData.productId);
+
     const handleSave = async () => {
-        if (!formData.productId || !formData.store || !formData.quantity || parseFloat(formData.quantity) <= 0) {
+        if (!formData.store || !formData.quantity || parseFloat(formData.quantity) <= 0) {
             toast.current.show({
                 severity: "warn",
                 summary: "Uyarı",
-                detail: "Lütfen tüm alanları doldurun ve miktar 0'dan büyük olmalı!",
+                detail: "Lütfen depo ve miktar alanlarını doldurun. Miktar 0'dan büyük olmalı!",
                 life: 3000
             });
             return;
@@ -46,9 +48,8 @@ export default function StockUpdate({ visible, onHide, stock, onUpdated, product
         try {
             const dto = {
                 id: stock.id,
-                productId: parseInt(formData.productId),
-                store: formData.store,
-                quantity: parseFloat(formData.quantity)
+                quantity: parseFloat(formData.quantity),
+                store: formData.store
             };
 
             const res = await StockService.update(dto);
@@ -85,16 +86,14 @@ export default function StockUpdate({ visible, onHide, stock, onUpdated, product
         <Dialog header="Stok Güncelle" visible={visible} style={{ width: "400px" }} onHide={onHide} modal>
             <Toast ref={toast} />
             <div className="p-fluid">
+                {/* Ürün bilgisi sadece gösterim amaçlı */}
                 <div className="field">
                     <label>Ürün</label>
-                    <Dropdown
-                        value={formData.productId}
-                        options={products || []}
-                        optionLabel="name"
-                        optionValue="id"
-                        onChange={(e) => setFormData({ ...formData, productId: e.value })}
-                        placeholder="Ürün seçiniz"
-                        disabled // Ürün değiştirilemez, sadece depo ve miktar
+                    <input
+                        type="text"
+                        value={selectedProduct ? selectedProduct.name : ""}
+                        className="p-inputtext p-component"
+                        disabled
                     />
                 </div>
 
@@ -123,8 +122,8 @@ export default function StockUpdate({ visible, onHide, stock, onUpdated, product
             </div>
 
             <div className="flex gap-2 mt-3 justify-end">
-                <Button label="İptal" severity="secondary" onClick={onHide} />
-                <Button label="Kaydet" severity="success" onClick={handleSave} />
+                <Button label="Kaydet" severity="success" onClick={handleSave} /> <Button label="İptal" severity="secondary" onClick={onHide} />
+
             </div>
         </Dialog>
     );
